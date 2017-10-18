@@ -28,14 +28,22 @@ public class CalendarView extends View {
      */
     private Calendar calendar;
     private  List<Day> days;
+   private String[] str,str1,str1_g,girl;
+    private String wrong,isday;
 
     /**
      * 改变日期，并更改当前状态，由于绘图是在calendar基础上进行绘制的，所以改变calendar就可以改变图片
      *
      * @param calendar
      */
-    public void setCalendar(Calendar calendar) {
+    public void setCalendar(Calendar calendar,String[] str,String[] str1,String wrong,String isday,String[] girl,String[] str1_g) {
 
+       this.str = str;
+        this.str1 = str1;
+        this.wrong = wrong;
+        this.isday = isday;
+        this.girl = girl;
+        this.str1_g = str1_g;
         this.calendar = calendar;
         if ((calendar.get(Calendar.MONTH) + "" + calendar.get(Calendar.YEAR)).equals(DayManager.getCurrentTime())) {
 
@@ -81,8 +89,11 @@ public class CalendarView extends View {
         paint = new Paint();
         paint.setAntiAlias(true);
         calendar = Calendar.getInstance();
+
+
         DayManager.setCurrent(calendar.get((Calendar.DAY_OF_MONTH)));
         DayManager.setCurrentTime(calendar.get(Calendar.MONTH) + "" + calendar.get(Calendar.YEAR));
+
 
 
     }
@@ -93,8 +104,8 @@ public class CalendarView extends View {
 
         //获取day集合并绘制
         for (Day day : days) {
-            Log.e("myMessage","fff= "+day.text+"==== "+day.workState);
-            day.drawDays(canvas, context, paint);
+           // Log.e("myMessage","fff= "+day.text+"==== "+day.workState);
+            day.drawDays(canvas, context, paint,str,str1,wrong,isday,girl,str1_g);
         }
 
     }

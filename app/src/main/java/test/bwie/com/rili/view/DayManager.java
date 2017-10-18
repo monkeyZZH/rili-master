@@ -194,8 +194,10 @@ public class DayManager  {
             day.location_x = calendar.get(Calendar.DAY_OF_WEEK) - 1;
             //设置日期选择状态
             if (i == current - 1) {
-                day.backgroundStyle = 3;
-                day.textClor = 0xFFffffff;
+//                day.backgroundStyle = 3;
+//                day.textClor = 0xFFffffff;
+                day.backgroundStyle = 2;
+                day.textClor = 0xFF000000;
 
             } else if (i == select - 1) {
                 day.backgroundStyle = 2;
@@ -214,43 +216,5 @@ public class DayManager  {
         return days;
     }
 
-    /**
-     * 模拟数据
-     */
-    public static void imitateData(int[] adays) {
-        abnormalDays.clear();
-        for (int i = 0; i < adays.length; i++) {
-            abnormalDays.add(adays[i]);
-        }
-        //设置工作状态
-        for (int j = 0; j < count; j++) {
-            if (abnormalDays.contains(j + 1)) {
-                days.get(j).textClor = 0xFFF16269;
-                days.get(j).workState = 2;
-            }else{
-                days.get(j).workState = 1;
-            }
-        }
-
-    }
-    public static void imitateData2(int[] adays) {
-
-        outDays.clear();
-        for (int i = 0; i < adays.length; i++) {
-            outDays.add(adays[i]);
-        }
-        //设置工作状态
-        for (int j = 0; j < count; j++) {
-            if (outDays.contains(j + 1)) {
-                days.get(j).textClor = 0xFFF16269;
-                days.get(j).workState2 = 1;
-            }else{
-                days.get(j).workState2 = 2;
-            }
-        }
-
-
-
-    }
 
 }

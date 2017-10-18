@@ -1,8 +1,12 @@
 package test.bwie.com.rili;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
@@ -66,6 +70,8 @@ public class Day {
 
     public boolean isToday;
 
+
+
     /**
      * 创建日期对象
      * @param width 每个日期格子的宽度
@@ -84,21 +90,21 @@ public class Day {
      * @param paint   画笔
      * @param context 画布的上下文对象
      */
-    public void drawDays(Canvas canvas, Context context, Paint paint) {
+    public void drawDays( Canvas canvas, Context context, Paint paint,String[] str,String[] str1,String wrong,String isday,String[] girl,String[] str1_g) {
         //取窄的边框为圆的半径
 
         backgroundR = width > height ? height : width;
 
         //画背景
-        drawBackground(canvas, paint);
-
-        //画数字
-        drawTaxt(canvas, paint);
-
-
-
+        drawBackground(context,canvas, paint,str,str1,str1_g);
         //画对号
-        drawMark(canvas, paint);
+        drawMark(canvas, paint,girl,context);
+        //画数字
+        drawTaxt(context,canvas, paint,wrong,isday);
+
+
+
+
 
     }
 
@@ -108,31 +114,35 @@ public class Day {
      * @param canvas
      * @param paint
      */
-    private void drawMark(Canvas canvas, Paint paint) {
+    private void drawMark(Canvas canvas, Paint paint,String[] girl,Context context) {
         //确定圆心位置
         float cx = location_x * width + width / 2;
-        float xy = location_y * height + height * 44 / 60;
+        float xy = location_y * height + height ;
 
         paint.setStrokeWidth(2);
         paint.setStyle(Paint.Style.STROKE);
 
-        //根据工作状态设置画笔颜色
-        if (workState2 == 0) {
-            return;
-        }
-        switch (workState2) {
-            case 2:
+        //女生特权
 
-                break;
-            case 1:
-//                paint.setColor(Color.RED);
-//                Path path = new Path();
-//                path.moveTo(cx-5, xy-5);
-//                path.lineTo(cx,xy);
-//                path.lineTo(cx+10, xy-10);
-//                canvas.drawPath(path,paint);
-                break;
+        for(int i = 0;i<girl.length;i++)
+        {
+
+            if(girl[i].equals(text)){
+                //画点
+                paint.setColor(Color.RED);
+                Path path = new Path();
+                path.moveTo(cx-5, xy-5);
+                path.lineTo(cx,xy);
+                path.lineTo(cx+10, xy-10);
+                canvas.drawPath(path,paint);
+                //化红心
+                Bitmap rawBitmap = BitmapFactory.decodeResource(context.getResources(),R.drawable.hongxin);
+                canvas.drawBitmap(rawBitmap, location_x * width+width/5-3, location_y * height+height/5-2, paint);
+            }
         }
+
+
+
 
     }
     /**
@@ -141,7 +151,7 @@ public class Day {
      * @param canvas
      * @param paint
      */
-    private void drawTaxt(Canvas canvas, Paint paint) {
+    private void drawTaxt(Context context,Canvas canvas, Paint paint,String wrong,String isday) {
         //根据圆的半径设置字体的大小
         textSize = backgroundR / 3;
         paint.setTextSize(textSize);
@@ -155,6 +165,23 @@ public class Day {
         float x = location_x * width + (width - w) / 2;
         float y = location_y * height + (height + textSize/2) / 2;
         canvas.drawText(text, x, y, paint);
+        //大卡中断
+        if(wrong != null){
+            if(wrong.equals(text)){
+                Bitmap rawBitmap = BitmapFactory.decodeResource(context.getResources(),R.drawable.huang);
+                canvas.drawBitmap(rawBitmap, location_x * width+width/5-3, location_y * height+height/5-2, paint);
+
+            }
+        }
+        //打卡成功
+        if(isday != null){
+            if(isday.equals(text)&&isToday){
+                Bitmap rawBitmap = BitmapFactory.decodeResource(context.getResources(),R.drawable.duihao);
+                canvas.drawBitmap(rawBitmap, location_x * width+width/5-3, location_y * height+height/5-2, paint);
+            }
+        }
+
+
     }
 
     /**
@@ -163,44 +190,65 @@ public class Day {
      * @param canvas
      * @param paint
      */
-    private void drawBackground(Canvas canvas, Paint paint) {
+    private void drawBackground(Context context,Canvas canvas, Paint paint,String[] str ,String[] str1,String[] str1_g) {
         //计算圆心的位置
         float cx = location_x * width + width / 2;
         float cy = location_y * height + height / 2;
+        int radius = backgroundR * 9 / 20;
         //画背景 根据背景状态设置画笔类型
         if (backgroundStyle == 0) {
             return;
         }
-        if (hadPassed){
-            drawRoundRect(canvas,paint);
-        }
-        if (!hadPassed || isToday){
-            switch (backgroundStyle) {
-                case 1:
-                    paint.setColor(0xFFFAFAFA);
-                    paint.setStyle(Paint.Style.FILL);
-                    break;
-                case 2:
-                    // paint.setStyle(Paint.Style.FILL);
-                    // paint.setColor(0xFFE52615);
-                    break;
-                case 3:
-                    paint.setColor(0xFFEE6F79);
-                    paint.setStyle(Paint.Style.FILL);
+            //打卡中断
+            drawRoundRect(canvas,paint,str);
+            //打卡
+            drawRoundRect2(canvas,paint,str1);
+        //女生特权之后的打卡
+        drawRoundRect2(canvas,paint,str1_g);
 
-                    break;
-            }
-            canvas.drawCircle(cx, cy, backgroundR * 9 / 20, paint);
+        //当天还没有打卡，就是刚进入的状态
+        switch (backgroundStyle) {
+            case 1:
+                paint.setColor(0xFFFAFAFA);
+                paint.setStyle(Paint.Style.FILL);
+                break;
+            case 2:
+                 paint.setStyle(Paint.Style.FILL);
+                 paint.setColor(0xFFEE6F7A);
+                break;
+            case 3:
+
+
+                break;
         }
+        canvas.drawCircle(cx, cy, backgroundR * 9 / 20-7, paint);
+
     }
 
-    private void drawRoundRect(Canvas canvas, Paint paint){
+    private void drawRoundRect(Canvas canvas, Paint paint,String[] str){
         float cx = location_x * width + width / 2;
         float cy = location_y * height + height / 2;
         float radius = backgroundR * 9 / 20;
-        paint.setColor(0xFFFDE8EA);
+        paint.setColor(0xFFF3F4F6);
         paint.setStyle(Paint.Style.FILL);
-        if (("01".equals(text) || location_x == 0) && backgroundStyle !=3){
+
+        for(int i = 0;i<str.length;i++){
+            int a = 1;
+            String s = str[i];
+            if(s.equals(text)){
+                a = location_x;
+            }
+
+            int b = 1;
+            if(str[0].equals(text)){
+                b = location_x;
+            }
+            int c = 1;
+            if(str[str.length-1].equals(text)){
+                c = location_x;
+            }
+
+        if (((s.equals(text)&&i==0)||a==0) && backgroundStyle !=3  && b!=6 && c!=0){
             canvas.drawCircle(cx , cy, radius , paint);
             RectF rect = new RectF();
             rect.left = cx;
@@ -208,23 +256,81 @@ public class Day {
             rect.right = location_x * width + width;
             rect.bottom = cy + radius;
             canvas.drawRect(rect, paint);
-        }
-
-        else if (location_x == 6||(location_x == 2&&location_y==3)){
-            canvas.drawCircle(cx , cy, radius , paint);
-            RectF rect = new RectF();
-            rect.left = location_x * width;
-            rect.top = cy - radius;
-            rect.right = cx;
-            rect.bottom = cy + radius;
-            canvas.drawRect(rect,paint);
-        }else {
+        }else if(a!=0 && a!= 6 && i!= 0 && i!=str.length-1 && s.equals(text) && backgroundStyle !=3)
+        {
             RectF rect = new RectF();
             rect.left = location_x * width;
             rect.top = cy - radius;
             rect.right = location_x * width + width;
             rect.bottom = cy + radius;
             canvas.drawRect(rect,paint);
+        }else if(((s.equals(text)&&i==str.length-1)||a==6) && backgroundStyle !=3  && b!=6 && c!=0){
+                        canvas.drawCircle(cx , cy, radius , paint);
+            RectF rect = new RectF();
+            rect.left = location_x * width;
+            rect.top = cy - radius;
+            rect.right = cx;
+            rect.bottom = cy + radius;
+            canvas.drawRect(rect,paint);
+        }else if(c==0||b==6){
+            canvas.drawCircle(cx, cy, backgroundR * 9 / 20, paint);
+        }
+        }
+
+
+    }
+    private void drawRoundRect2(Canvas canvas, Paint paint,String[] str){
+
+        float cx = location_x * width + width / 2;
+        float cy = location_y * height + height / 2;
+        float radius = backgroundR * 9 / 20;
+        paint.setColor(0xFFFDE8EA);
+        paint.setStyle(Paint.Style.FILL);
+
+        for(int i = 0;i<str.length;i++){
+            int a = 1;
+            String s = str[i];
+            if(s.equals(text)){
+                a = location_x;
+            }
+            int b = 1;
+            if(str[0].equals(text)){
+                b = location_x;
+            }
+            int c = 1;
+            if(str[str.length-1].equals(text)){
+                c = location_x;
+            }
+
+
+            if (((s.equals(text)&&i==0)||a==0) && backgroundStyle !=3 && b!=6 && c!=0){
+                canvas.drawCircle(cx , cy, radius , paint);
+                RectF rect = new RectF();
+                rect.left = cx;
+                rect.top = cy - radius;
+                rect.right = location_x * width + width;
+                rect.bottom = cy + radius;
+                canvas.drawRect(rect, paint);
+            }else if(a!=0 && a!= 6 && i!= 0 && i!=str.length-1 && s.equals(text) && backgroundStyle !=3)
+            {
+                RectF rect = new RectF();
+                rect.left = location_x * width;
+                rect.top = cy - radius;
+                rect.right = location_x * width + width;
+                rect.bottom = cy + radius;
+                canvas.drawRect(rect,paint);
+            }else if(((s.equals(text)&&i==str.length-1)||a==6) && backgroundStyle !=3 && b!=6 && c!=0){
+                canvas.drawCircle(cx , cy, radius , paint);
+                RectF rect = new RectF();
+                rect.left = location_x * width;
+                rect.top = cy - radius;
+                rect.right = cx;
+                rect.bottom = cy + radius;
+                canvas.drawRect(rect,paint);
+            }
+            else if(c==0||b==6){
+                canvas.drawCircle(cx, cy, backgroundR * 9 / 20, paint);
+            }
         }
 
 
