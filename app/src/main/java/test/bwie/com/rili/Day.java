@@ -208,20 +208,15 @@ public class Day {
 
         //当天还没有打卡，就是刚进入的状态
         switch (backgroundStyle) {
-            case 1:
-                paint.setColor(0xFFFAFAFA);
-                paint.setStyle(Paint.Style.FILL);
-                break;
+
             case 2:
                  paint.setStyle(Paint.Style.FILL);
                  paint.setColor(0xFFEE6F7A);
+                canvas.drawCircle(cx, cy, backgroundR * 9 / 20-7, paint);
                 break;
-            case 3:
 
-
-                break;
         }
-        canvas.drawCircle(cx, cy, backgroundR * 9 / 20-7, paint);
+
 
     }
 

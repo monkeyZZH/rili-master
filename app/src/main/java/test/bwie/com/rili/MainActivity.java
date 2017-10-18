@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void init() {
         //打卡终端，也就是灰色部分
-        str = new String[]{};
+        str = new String[]{"01","02","03"};
         //打卡中  粉红色部分
         str1 = new String[]{};
         //女生特权 之后的打卡部分
