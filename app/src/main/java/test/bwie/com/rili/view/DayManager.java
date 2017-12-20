@@ -160,8 +160,7 @@ public class DayManager  {
      */
 
     public static List<Day> createDayByCalendar(Calendar calendar, int width, int heigh) {
-        //模拟数据
-        //imitateData();
+
 
         days.clear();
         Day day = null;

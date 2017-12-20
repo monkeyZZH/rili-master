@@ -29,6 +29,7 @@
         android:layout_gravity="center_horizontal"
         android:paddingTop="10dip"
         android:paddingBottom="10dip"
+
         style="@android:style/TextAppearance.Medium" />
 
     <LinearLayout

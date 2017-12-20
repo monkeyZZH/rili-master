@@ -60,17 +60,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void init() {
         //打卡终端，也就是灰色部分
-        str = new String[]{"01","02","03"};
+        str = new String[]{"01","02"};
         //打卡中  粉红色部分
-        str1 = new String[]{};
+        str1 = new String[]{"25"};
         //女生特权 之后的打卡部分
         str1_g= new String[]{};
         //女生特权
-        girl = new String[]{};
+        girl = new String[]{"15","16"};
         //在那一天中断打卡的
-//        wrong = "10";
+        wrong = "24";
         //当天打卡成功 ，假如今天是18号   就写18
-      //  isday = "18";
+          isday = "26";
 
         //以上所有内容，没有的都可以不写，跟你获取到的值在进行赋值
 
